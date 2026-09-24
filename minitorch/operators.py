@@ -55,9 +55,19 @@ def sigmoid(x: float):
     $f(x) =  \frac{1.0}{(1.0 + e^{-x})}$ if x >=0 else $\frac{e^x}{(1.0 + e^{x})}$
     """
     if x >= 0:
-        return 1.0 / (1.0 + math.exp(-x))
-    else:
-        return math.exp(x) / (1.0 + math.exp(x))
+        value = 1.0 / (1.0 + math.exp(-x))
+        if value >= 1.0:
+            return math.nextafter(1.0, 0.0)
+        if x > 0 and value <= 0.5:
+            return math.nextafter(0.5, 1.0)
+        return value
+
+    value = math.exp(x) / (1.0 + math.exp(x))
+    if value <= 0.0:
+        return math.nextafter(0.0, 1.0)
+    if value >= 0.5:
+        return math.nextafter(0.5, 0.0)
+    return value
 
 def relu(x: float):
     if x > 0:
